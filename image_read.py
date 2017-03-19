@@ -10,7 +10,9 @@ i=0
 for filename in glob.glob('TrainingSpoof/*.png'): #assuming gif
     im=Image.open(filename)
     x=np.asarray(im)
-    image_list[i]=x
 
-print image_list[1].shape
+    image_list[i]=x
+    i=i+1
+
+print image_list
 np.save("TrainingSpoof.npy",image_list)
