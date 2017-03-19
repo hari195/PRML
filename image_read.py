@@ -1,11 +1,16 @@
-import cv2
+
+from tempfile import TemporaryFile
 import numpy as np
-im=cv2.imread("001_L_1.png")
-im_bw= cv2.threshold(im, 200, 255, cv2.THRESH_BINARY)[1]
-cv2.imshow('im_bw', im_bw)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-x=np.asarray(im)
-print x[100,23,0]
-print x[100,23,1]
-print x[100,23,2]
+from PIL import Image
+import glob
+
+outfile = TemporaryFile()
+image_list = np.ones((120,150,565), dtype=np.int)
+i=0
+for filename in glob.glob('TrainingSpoof/*.png'): #assuming gif
+    im=Image.open(filename)
+    x=np.asarray(im)
+    image_list[i]=x
+
+print image_list[1].shape
+np.save("TrainingSpoof.npy",image_list)
