@@ -7,11 +7,10 @@ from numpy.linalg import det
 def find_val(w,mu,cov,x):
     delta=x-mu
     deltat=np.transpose(delta)
-    cinv=inv(cov)    
+    cinv=inv(cov)
     m=np.multiply(-0.5,np.dot(np.dot(deltat,cinv),delta))
-    m=2.71828 ** m
-    d=math.sqrt((6.28   )*np.linalg.det(cinv))
-
+    m=w*(2.71828 ** m)
+    d=math.sqrt((6.28)*np.linalg.det(cinv))
     return m/d
 
 # Import data from file
@@ -26,7 +25,7 @@ mu1 = 10
 sigma1 = np.identity(565)
 w1 = 0.5
 
-mu2 = 10
+mu2 = 20
 sigma2 = np.identity(565)
 w2 = 0.5
 
@@ -50,8 +49,9 @@ for num in range(1,1000):
         x = TrainingReal[i][0]
 
         a = find_val(w1,mu1,sigma1,x)
-        b = find_val(w2,mu2,sigma2,x)
 
+        b = find_val(w2,mu2,sigma2,x)
+        
         p1[i]=a/(a+b)
         p2[i]=b/(a+b)
         p1x[i]=np.multiply(x,p1[i])
@@ -75,6 +75,7 @@ for num in range(1,1000):
     w2=1-w1
     mu1=np.sum(p1x)/np.sum(p1)
     mu2=np.sum(p2x)/np.sum(p2)
+
     sigma1 = np.sum(p1xx)/np.sum(p1)
     sigma2 = np.sum(p2xx)/np.sum(p2)
 
