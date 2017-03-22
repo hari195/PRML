@@ -8,9 +8,11 @@ def find_val(w,mu,cov,x):
     delta=x-mu
     deltat=np.transpose(delta)
     cinv=inv(cov)
-    m=np.multiply(-0.5,np.dot(np.dot(deltat,cinv),delta))
+    m=np.multiply(-0.5,np.matmul(np.dot(deltat,cinv),delta))
+    print m
     m=w*(2.71828 ** m)
     d=math.sqrt((6.28)*np.linalg.det(cinv))
+
     return m/d
 
 # Import data from file
@@ -51,14 +53,16 @@ for num in range(1,1000):
         a = find_val(w1,mu1,sigma1,x)
 
         b = find_val(w2,mu2,sigma2,x)
-        
+
         p1[i]=a/(a+b)
         p2[i]=b/(a+b)
         p1x[i]=np.multiply(x,p1[i])
         p2x[i]=np.multiply(x,p2[i])
+
         delta=x-mu1
         delta = delta.reshape((-1,1))
         deltat = delta.reshape((-1,1)).reshape(1,565)
+
         p1xx[i] = np.multiply(p1[i],np.dot(delta,deltat))
 
         delta=x-mu2
@@ -78,7 +82,8 @@ for num in range(1,1000):
 
     sigma1 = np.sum(p1xx)/np.sum(p1)
     sigma2 = np.sum(p2xx)/np.sum(p2)
-
+    print np.sum(p1)
+    print np.sum(p1xx)
 
     # Check for convergence or Repeat
     if prevmu1==mu1 and prevmu2==mu2:
