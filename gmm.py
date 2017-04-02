@@ -6,12 +6,13 @@ from numpy.linalg import det
 
 def find_val(w,mu,cov,x):
     delta=x-mu
+    print delta
     deltat=np.transpose(delta)
     cinv=inv(cov)
-    m=np.multiply(-0.5,np.matmul(np.dot(deltat,cinv),delta))
-    print m
+    m=np.dot(-0.5,np.dot(np.dot(deltat,cinv),delta))
+    #print m
     m=w*(2.71828 ** m)
-    d=math.sqrt((6.28)*np.linalg.det(cinv))
+    d=math.sqrt((6.28)*np.linalg.det(cinv)) ** 150
 
     return m/d
 
@@ -23,11 +24,11 @@ TrainingReal = np.load("TrainingReal.npy")
 TrainingSpoof = np.load("TrainingSpoof.npy")
 
 # Initilaize 2 means, sigma, and weights
-mu1 = 10
+mu1 = np.ones(565,)
 sigma1 = np.identity(565)
 w1 = 0.5
 
-mu2 = 20
+mu2 = np.ones(565,)
 sigma2 = np.identity(565)
 w2 = 0.5
 
@@ -49,7 +50,7 @@ for num in range(1,1000):
     # Compute initial Expectation with the given values, and assign each data point to either of the class
     for i in range(0,120):
         x = TrainingReal[i][0]
-
+        print x.shape
         a = find_val(w1,mu1,sigma1,x)
 
         b = find_val(w2,mu2,sigma2,x)
@@ -76,15 +77,16 @@ for num in range(1,1000):
 
     # Recompute 6 paramters.
     w1=np.sum(p1)/120
+
     w2=1-w1
     mu1=np.sum(p1x)/np.sum(p1)
     mu2=np.sum(p2x)/np.sum(p2)
 
     sigma1 = np.sum(p1xx)/np.sum(p1)
     sigma2 = np.sum(p2xx)/np.sum(p2)
-    print np.sum(p1)
-    print np.sum(p1xx)
+
 
     # Check for convergence or Repeat
-    if prevmu1==mu1 and prevmu2==mu2:
+    if (prevmu1==mu1).all() and (prevmu2==mu2).all():
+        print "CONVERGED"
         break
